@@ -1,4 +1,4 @@
-import { FilterQuery } from "mongoose";
+import { FilterQuery, ProjectionType } from "mongoose";
 import Property from "~/models/property";
 import { IProperty } from "~/types/models/property";
 
@@ -13,9 +13,13 @@ class PropertyService {
     return property;
   }
 
-  static async getQueriedProperties(query: FilterQuery<IProperty>) {
-    const property = await Property.find(query);
-    return property;
+  static async getQueriedProperties(
+    property: IProperty,
+    projection?: ProjectionType<IProperty>,
+    query?: FilterQuery<IProperty>
+  ) {
+    const filteredProperty = await Property.find(property, projection, query);
+    return filteredProperty;
   }
 
   static async createProperty(property: Partial<IProperty>) {

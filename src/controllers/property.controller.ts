@@ -26,8 +26,14 @@ class PropertyController {
   ) {
     try {
       const query = req.query || {};
-      const property = await PropertyService.getQueriedProperties(query);
-      return res.send(property).status(200);
+      const projection = req.body.projection || {};
+      const property = req.body.property || {};
+      const filteredProperty = await PropertyService.getQueriedProperties(
+        property,
+        projection,
+        query
+      );
+      return res.send(filteredProperty).status(200);
     } catch (error) {
       next(error);
     }

@@ -1,3 +1,3 @@
-import property from "./property";
+import payments from "./payments";
 
-export { property };
+export { payments };

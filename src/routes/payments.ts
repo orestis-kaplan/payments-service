@@ -23,19 +23,19 @@ router.post(
   PropertyController.createPayment
 );
 router.get(
-  "/:paymentId",
+  "/:id",
   PaymentValidationRules.getPaymentByIdValidationRules(),
   validate,
   PropertyController.getQueriedPayments
 );
 router.put(
-  "/:paymentId",
+  "/:id",
   ...PaymentValidationRules.updatePaymentByIdValidationRules(),
   validate,
   PropertyController.updatePaymentById
 );
 router.delete(
-  "/:paymentId",
+  "/:id",
   PaymentValidationRules.deletePaymentByIdValidationRules(),
   validate,
   PropertyController.deletePaymentById

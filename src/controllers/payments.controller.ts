@@ -5,13 +5,10 @@ import { ServerError } from "~/middlewares/error.middleware";
 class PaymentsController {
   static async getPaymentById(req: Request, res: Response, next: NextFunction) {
     try {
-      const paymentId = req.params.paymentId || undefined;
-      if (paymentId) {
-        const payment = await PaymentService.getPaymentsById(paymentId);
-        return res.json(payment).status(200);
-      } else {
-        throw new ServerError("Payment Id is required", 400);
-      }
+      const paymentId = req.params.id;
+
+      const payment = await PaymentService.getPaymentsById(paymentId);
+      return res.json(payment).status(200);
     } catch (error) {
       next(error);
     }
@@ -25,9 +22,9 @@ class PaymentsController {
     try {
       const query = req.query || {};
       const projection = req.body.projection || {};
-      const property = req.body.property || {};
+      const payment = req.body.payment || {};
       const filteredProperty = await PaymentService.getQueriedPayments(
-        property,
+        payment,
         projection,
         query
       );
@@ -49,7 +46,7 @@ class PaymentsController {
   static async updatePaymentById(req: Request, res: Response) {
     try {
       const payment = await PaymentService.updatePaymentById(
-        req.params.propertyId,
+        req.params.id,
         req.body
       );
       return res.json(payment).status(200);
@@ -60,9 +57,7 @@ class PaymentsController {
 
   static async deletePaymentById(req: Request, res: Response) {
     try {
-      const payment = await PaymentService.deletePaymentById(
-        req.params.propertyId
-      );
+      const payment = await PaymentService.deletePaymentById(req.params.id);
       return res.json(payment).status(200);
     } catch (error) {
       return res.json(error).status(400);

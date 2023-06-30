@@ -7,7 +7,6 @@ import * as availableRoutes from "./routes";
 import { IRoutes } from "./types/route";
 import cors from "cors";
 import errorMiddleware from "./middlewares/error.middleware";
-import bodyParser from "body-parser";
 import { keycloak } from "./auth/keycloak";
 import expressSession from "express-session";
 import { initMongoDBStore } from "./db/mongoStore";
@@ -30,9 +29,9 @@ app.use(
 
 app.use(keycloak.middleware());
 
-app.use(bodyParser.json());
+app.use(express.json());
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 

@@ -23,9 +23,13 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: initMongoDBStore(expressSession),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      secure: process.env.NODE_ENV === "production",
+    },
   })
 );
-// app.set('trust proxy', true );
+if (process.env.NODE_ENV === "production") app.set("trust proxy", true);
 
 app.use(keycloak.middleware());
 

@@ -6,12 +6,13 @@ import express from "express";
 import * as availableRoutes from "./routes";
 import { IRoutes } from "./types/route";
 import cors from "cors";
-import errorMiddleware from "./middlewares/error.middleware";
+import errorMiddleware, { ServerError } from "./middlewares/error.middleware";
 import { keycloak } from "./auth/keycloak";
 import expressSession from "express-session";
 import { initMongoDBStore } from "./db/mongoStore";
 import { mongodbConnect } from "~/db";
 import morgan from "morgan";
+import { KafkaService } from "./kafka";
 
 const app = express();
 
@@ -51,6 +52,9 @@ mongodbConnect()
   .catch((err) => console.log(err))
   .finally(() => console.log("MongoDB is connected"));
 
+KafkaService.consume().catch((error) => {
+  throw new ServerError(error, 500);
+});
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });

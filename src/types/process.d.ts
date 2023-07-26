@@ -8,5 +8,15 @@ declare namespace NodeJS {
     MONGODB_STORE_CONNECTION_STRING: string;
     MONGODB_STORE_COLLECTION: string;
     MONGDB_CONNECTION_STRING: string;
+    SMTP_SERVER_HOST: string;
+    SMTP_SERVER_USERNAME: string;
+    SMTP_SERVER_PASSWORD: string;
+    KAFKA_CERTIFICATES_PATH: string;
+    KAFKA_CLIENT_ID: string;
+    KAFKA_BROKER_1_HOST: string;
+    KAFKA_BROKER_2_HOST: string;
+    KAFKA_SCHEMA_REGISTRY_HOST: string;
+    KAFKA_CLIENT_USER: string;
+    KAFKA_CLIENT_PASSWORD: string;
   }
 }

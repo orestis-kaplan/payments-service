@@ -1,8 +1,8 @@
-import { Kafka } from "kafkajs";
+import { Kafka, Message } from "kafkajs";
 import { SchemaRegistry } from "@kafkajs/confluent-schema-registry";
 import fs from "fs";
 import PaymentsService from "~/services/payments.service";
-import { sendEmail } from "~/mailer";
+import { AvailableTopics } from "~/types/kafka/topics";
 
 const key = fs.readFileSync(
   `${process.env.KAFKA_CERTIFICATES_PATH}/ca.key`,
@@ -36,72 +36,72 @@ const kafka = new Kafka({
 
 const admin = kafka.admin();
 const producer = kafka.producer();
-const consumer = kafka.consumer({ groupId: "customers-service-group" });
+const consumer = kafka.consumer({ groupId: "payments-service-group" });
 
-interface KafkaMessage {
-  key: string;
-  value: object;
-}
 class KafkaService {
-  static TOPIC = "customers";
-
-  static sendMessage = async (message: KafkaMessage) => {
+  static sendMessage = async (topics: AvailableTopics[], message: Message) => {
     await producer.connect();
     // const registryId = await schemaRegistry.getRegistryId("users_scema", 1);
     // const schema = await schemaRegistry.getSchema(registryId);
     // console.log(schema);
     // const serializedMessage = await schemaRegistry.encode(registryId, message);
+    for (const topic of topics) {
+      await producer.send({
+        topic,
+        messages: [message],
+      });
+    }
 
-    await producer.send({
-      topic: "customers",
-      messages: [{ key: "Files Uploaded", value: JSON.stringify(message) }],
-    });
     await producer.disconnect();
     console.log("Message sent successfully!");
   };
 
   static consume = async () => {
-    const offsets = await admin.fetchTopicOffsets(this.TOPIC);
-    console.log(offsets);
-    const currentOffset = offsets[0].offset;
     await consumer.connect();
-    await consumer.subscribe({ topic: this.TOPIC, fromBeginning: false });
+
+    await consumer.subscribe({
+      topic: AvailableTopics.CUSTOMERS,
+      fromBeginning: false,
+    });
+    await consumer.subscribe({
+      topic: AvailableTopics.PROPERTIES,
+      fromBeginning: false,
+    });
+
+    const customersTopicOffsets = await admin.fetchTopicOffsets(
+      AvailableTopics.CUSTOMERS
+    );
+    const customersTopicCurrentOffset = customersTopicOffsets[0].offset;
+
+    const propertiesTopicOffsets = await admin.fetchTopicOffsets(
+      AvailableTopics.CUSTOMERS
+    );
+    const propertiesTopicCurrentOffset = propertiesTopicOffsets[0].offset;
 
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         // const decodedKey = await schemaRegistry.decode(message.key);
         // const decodedValue = await schemaRegistry.decode(message.value);
-        console.log(
-          "Message received!",
-          message.key?.toString() === "PaymentCompleted",
-          message.value?.toString()
-        );
-        if (message.key?.toString() === "PaymentCompleted") {
-          try {
-            console.log("sending");
-            await sendEmail(
-              "nstarakis@wiselord.gr",
-              "Files Uploaded",
-              "Files Uploaded"
-            );
-          } catch (error) {
-            console.log(error);
-          }
-          //   const messageValue = message.value?.toString();
-          //   if (messageValue) {
-          //     console.log(JSON.parse(messageValue));
-          //     const {
-          //       value: { customerId, filesPath },
-          //     } = JSON.parse(messageValue);
-          //     console.log("Files, were updated!");
-          //   }
+        switch (topic) {
+          case AvailableTopics.CUSTOMERS:
+            break;
+          case AvailableTopics.PROPERTIES:
+          default:
+            break;
         }
       },
     });
+
     await consumer.seek({
-      topic: this.TOPIC,
+      topic: AvailableTopics.CUSTOMERS,
       partition: 0,
-      offset: currentOffset,
+      offset: customersTopicCurrentOffset,
+    });
+
+    await consumer.seek({
+      topic: AvailableTopics.PROPERTIES,
+      partition: 0,
+      offset: propertiesTopicCurrentOffset,
     });
   };
 }

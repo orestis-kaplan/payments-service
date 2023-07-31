@@ -13,6 +13,7 @@ import { initMongoDBStore } from "./db/mongoStore";
 import { mongodbConnect } from "~/db";
 import morgan from "morgan";
 import { KafkaService } from "./kafka";
+import { AvailableTopics } from "./types/kafka/topics";
 
 const app = express();
 
@@ -55,6 +56,7 @@ mongodbConnect()
 KafkaService.consume().catch((error) => {
   throw new ServerError(error, 500);
 });
+
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });

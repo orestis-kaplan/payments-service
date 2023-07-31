@@ -1,25 +1,24 @@
-import { time } from "console";
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_SERVER_HOST,
-  port: 587,
+  port: process.env.SMTP_SERVER_PORT,
   //   secure: true, // use TLS
   auth: {
     user: process.env.SMTP_SERVER_USERNAME,
     pass: process.env.SMTP_SERVER_PASSWORD,
   },
-  //   tls: {
-  //     // do not fail on invalid certs
-  //     rejectUnauthorized: false,
-  //   },
+  tls: {
+    // do not fail on invalid certs
+    rejectUnauthorized: false,
+  },
 });
 
 export const sendEmail = async (to: string, subject: string, html: string) => {
   const info = await transporter.sendMail({
     from: '"Wiselord" <info@wiselord.gr', // sender address
     to,
-    subject: "Δουλευει το μειλ", // Subject line
+    subject, // Subject line
     text: "Hello world?", // plain text body
     html: "<b>Με το που κανεις το transaction θα σου ερχεται ενα email απο ενα no-reply</b>", // html body
   });

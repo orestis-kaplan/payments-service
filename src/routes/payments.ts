@@ -6,6 +6,7 @@ import PropertyController from "~/controllers/payments.controller";
 import PaymentValidationRules, {
   validate,
 } from "~/validations/paymentsValidation";
+import { checkPropertyBeforePayment } from "~/middlewares/checkPropertyBeforePayment";
 const router = Router();
 
 router.get(
@@ -20,6 +21,7 @@ router.post(
   "/",
   PaymentValidationRules.createPaymentValidationRules(),
   validate,
+  checkPropertyBeforePayment,
   PropertyController.createPayment
 );
 router.get(

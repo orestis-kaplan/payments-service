@@ -6,6 +6,7 @@ import {
   body,
   oneOf,
   checkSchema,
+  Meta,
 } from "express-validator";
 import { ServerError } from "~/middlewares/error.middleware";
 import PaymentModel from "~/models/payment";
@@ -47,6 +48,10 @@ const checkUpdatePayment = checkSchema(
         errorMessage: "amount must be an integer",
         bail: true,
       },
+      custom: {
+        options: (value: any, { req }: { req: Meta["req"] }) => value < 100,
+        errorMessage: "invalid amount",
+      },
     },
     date: {
       in: ["body"],
@@ -54,9 +59,10 @@ const checkUpdatePayment = checkSchema(
         errorMessage: "date is required",
         bail: true,
       },
-      isDate: {
-        errorMessage: "date must be a date",
-        bail: true,
+      custom: {
+        options: (value: string | number | Date) =>
+          new Date(value).toString() !== "Invalid Date",
+        errorMessage: "date field must be a Date object",
       },
     },
     type: {
@@ -132,6 +138,10 @@ const checkNewPayment = checkSchema(
         errorMessage: "amount must be an integer",
         bail: true,
       },
+      custom: {
+        options: (value: any, { req }: { req: Meta["req"] }) => value >= 100,
+        errorMessage: "invalid amount",
+      },
     },
     date: {
       in: ["body"],
@@ -139,9 +149,10 @@ const checkNewPayment = checkSchema(
         errorMessage: "date is required",
         bail: true,
       },
-      isDate: {
-        errorMessage: "date must be a date",
-        bail: true,
+      custom: {
+        options: (value: string | number | Date) =>
+          new Date(value).toString() !== "Invalid Date",
+        errorMessage: "date field must be a Date object",
       },
     },
     type: {

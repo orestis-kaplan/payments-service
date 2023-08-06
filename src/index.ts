@@ -1,7 +1,9 @@
 import "module-alias/register";
 import dotenv from "dotenv";
 import path from "path";
-dotenv.config({ path: path.join(__dirname, "..", ".env.development") });
+dotenv.config({
+  path: path.join(__dirname, "..", `.env.${process.env.NODE_ENV}`),
+});
 import express from "express";
 import * as availableRoutes from "./routes";
 import { IRoutes } from "./types/route";
@@ -13,7 +15,6 @@ import { initMongoDBStore } from "./db/mongoStore";
 import { mongodbConnect } from "~/db";
 import morgan from "morgan";
 import { KafkaService } from "./kafka";
-import { AvailableTopics } from "./types/kafka/topics";
 
 const app = express();
 

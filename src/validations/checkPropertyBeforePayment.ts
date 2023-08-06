@@ -1,6 +1,6 @@
 import axios from "axios";
 import { NextFunction, Request, Response } from "express";
-import { ServerError } from "./error.middleware";
+import { ServerError } from "../middlewares/error.middleware";
 
 export const checkPropertyBeforePayment = async (
   req: Request,
@@ -23,6 +23,8 @@ export const checkPropertyBeforePayment = async (
       );
     } else if (property.data.availability === "FUNDED") {
       throw new ServerError("The property is already funded", 400);
+    } else if (property.data.availability === "COMING_SOON") {
+      throw new ServerError("The property is not available yet", 400);
     }
 
     next();

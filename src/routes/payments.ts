@@ -6,7 +6,7 @@ import PropertyController from "~/controllers/payments.controller";
 import PaymentValidationRules, {
   validate,
 } from "~/validations/paymentsValidation";
-import { checkPropertyBeforePayment } from "~/middlewares/checkPropertyBeforePayment";
+import { checkPropertyBeforePayment } from "~/validations/checkPropertyBeforePayment";
 const router = Router();
 
 router.get(

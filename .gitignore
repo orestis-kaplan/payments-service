@@ -1,6 +1,8 @@
 # tsc build folder
 build/
 
+.env.development
+.env.production
 # Logs
 logs
 *.log

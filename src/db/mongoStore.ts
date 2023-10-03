@@ -9,5 +9,12 @@ export const initMongoDBStore = (session: typeof expressSession) => {
     collection: process.env.MONGODB_STORE_COLLECTION,
   });
 
+  mongoStore.on("error", function (error) {
+    console.log(error);
+  });
+
+  mongoStore.on("connected", function () {
+    console.log("MongoDBStore connected");
+  });
   return mongoStore;
 };

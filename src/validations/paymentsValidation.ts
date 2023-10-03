@@ -112,6 +112,17 @@ const checkUpdatePayment = checkSchema(
         bail: true,
       },
     },
+    alreadyInvested: {
+      in: ["body"],
+      exists: {
+        errorMessage: "alreadyInvested is required",
+        bail: true,
+      },
+      isBoolean: {
+        errorMessage: "alreadyInvested must be a boolean",
+        bail: true,
+      },
+    },
   },
   ["body"]
 );
@@ -199,6 +210,17 @@ const checkNewPayment = checkSchema(
       },
       isInt: {
         errorMessage: "shares must be an integer",
+        bail: true,
+      },
+    },
+    alreadyInvested: {
+      in: ["body"],
+      exists: {
+        errorMessage: "alreadyInvested is required",
+        bail: true,
+      },
+      isBoolean: {
+        errorMessage: "alreadyInvested must be a boolean",
         bail: true,
       },
     },

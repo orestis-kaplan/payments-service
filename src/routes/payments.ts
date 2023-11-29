@@ -24,6 +24,14 @@ router.post(
   checkPropertyBeforePayment,
   PropertyController.createPayment
 );
+
+router.get(
+  "/customer/:id",
+  PaymentValidationRules.getPaymentByIdValidationRules(),
+  validate,
+  PropertyController.getPaymentByCustomerId
+);
+
 router.get(
   "/:id",
   PaymentValidationRules.getPaymentByIdValidationRules(),

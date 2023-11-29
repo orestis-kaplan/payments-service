@@ -23,6 +23,11 @@ class PaymentsService {
     return savedPayment;
   }
 
+  static async getPaymentByCustomerId(customerId: IPayment["customer_id"]) {
+    const payment = await Payment.find({ customer_id: customerId });
+    return payment;
+  }
+
   static async updatePaymentById(
     paymentId: IPayment["_id"] | string,
     payment: IPayment

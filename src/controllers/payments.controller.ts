@@ -39,19 +39,34 @@ class PaymentsController {
     }
   }
 
+  static async getPaymentByCustomerId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const customerId = req.params.id;
+
+      const payment = await PaymentService.getPaymentByCustomerId(customerId);
+      return res.json(payment).status(200);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async createPayment(req: Request, res: Response) {
     try {
       const payment = await PaymentService.createPayment(req.body);
 
       // await sendEmail("orestismail71@gmail.com", "Payment Test", "");
 
-      await KafkaService.sendMessage(
-        [AvailableTopics.CUSTOMERS, AvailableTopics.PROPERTIES],
-        {
-          key: KafkaMessageKeys.PAYMENT_CREATED,
-          value: JSON.stringify(req.body),
-        }
-      );
+      // await KafkaService.sendMessage(
+      //   [AvailableTopics.CUSTOMERS, AvailableTopics.PROPERTIES],
+      //   {
+      //     key: KafkaMessageKeys.PAYMENT_CREATED,
+      //     value: JSON.stringify(req.body),
+      //   }
+      // );
 
       return res.json(payment).status(200);
     } catch (error) {

@@ -18,4 +18,5 @@ export interface IPayment {
   status: IStatus;
   property_id: string;
   shares: number;
+  devidends: number;
 }

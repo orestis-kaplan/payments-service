@@ -15,8 +15,17 @@ import { initMongoDBStore } from "./db/mongoStore";
 import { mongodbConnect } from "~/db";
 import morgan from "morgan";
 import { KafkaService } from "./kafka";
+import actuator, { Options } from "express-actuator";
+
+const options = {
+  basePath: "/actuator",
+  infoGitMode: "full" as Options["infoGitMode"],
+  customEndpoints: [],
+};
 
 const app = express();
+
+app.use(actuator(options));
 
 app.use(morgan("tiny"));
 

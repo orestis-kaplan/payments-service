@@ -1,7 +1,8 @@
 version: '3'
 
 services:
-  customers-service:
+  payments-service:
+    container_name: wiselord-payments-service
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,7 +10,7 @@ services:
     ports:
       - "3003:3003"
     volumes:
-      - ./:/customers-service
+      - ./:/payments-service
       - ../kafka/kafka_secrets/:/etc/kafka/secrets
     environment:
       - KEYCLOAK_URL=https://kaplan-is.space/keycloak

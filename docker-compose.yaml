@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  customers-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: "node"
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./:/customers-service
+    environment:
+      - KEYCLOAK_URL=https://kaplan-is.space/keycloak
+      - KEYCLOAK_CLIENT_ID=wiselord-staging
+      - KEYCLOAK_CLIENT_SECRET=f7xivWtXHh0BIDZFA25AaRkAyoyImQSN
+      - KEYCLOAK_REALM=Wiselord
+      - MONGODB_STORE_CONNECTION_STRING=mongodb://admin12%23:MasterUser%40142%23@185.237.13.240:27018,185.237.13.240:27019/wiselord-dev?retryWrites=true&replicaSet=rs0&readPreference=primary&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256
+      - MONGODB_STORE_COLLECTION=keycloak_sessions
+      - MONGDB_CONNECTION_STRING=mongodb://admin12%23:MasterUser%40142%23@185.237.13.240:27018,185.237.13.240:27019/wiselord-dev?retryWrites=true&replicaSet=rs0&readPreference=primary&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256
+      - SESSION_SECRET=wiselord_SECRET
+      - PORT=3003
+      - APP_URL=http://localhost:3000
+      - KAFKA_CERTIFICATES_PATH=/opt/kafka_secrets
+      - KAFKA_CLIENT_ID=payments-service
+      - KAFKA_BROKER_1_HOST=185.237.13.240:29094
+      - KAFKA_BROKER_2_HOST=185.237.13.240:29096
+      - KAFKA_SCHEMA_REGISTRY_HOST=http://kaplan-is.space:8085
+      - KAFKA_CLIENT_USER=admin
+      - KAFKA_CLIENT_PASSWORD=admin-secret
+      - CDN_URL=https://storage.bunnycdn.com/wiselordstoragezone/payments
+      - CDN_PUBLIC_URL=https://wiselordstoragezone.b-cdn.net/payments
+      - CDN_ACCESS_KEY=a409dc16-4e30-43e3-b90bd930d800-50cf-4464

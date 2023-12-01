@@ -10,6 +10,7 @@ services:
       - "3003:3003"
     volumes:
       - ./:/customers-service
+      - ../kafka/kafka_secrets/:/etc/kafka/secrets
     environment:
       - KEYCLOAK_URL=https://kaplan-is.space/keycloak
       - KEYCLOAK_CLIENT_ID=wiselord-staging
@@ -21,7 +22,7 @@ services:
       - SESSION_SECRET=wiselord_SECRET
       - PORT=3003
       - APP_URL=http://localhost:3000
-      - KAFKA_CERTIFICATES_PATH=/opt/kafka_secrets
+      - KAFKA_CERTIFICATES_PATH=/etc/kafka/secrets
       - KAFKA_CLIENT_ID=payments-service
       - KAFKA_BROKER_1_HOST=185.237.13.240:29094
       - KAFKA_BROKER_2_HOST=185.237.13.240:29096

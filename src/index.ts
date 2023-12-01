@@ -27,7 +27,11 @@ const app = express();
 
 app.use(actuator(options));
 
-app.use(morgan("tiny"));
+app.use(
+  morgan(
+    ":date[iso] :method :url :status :res[content-length] - :response-time ms"
+  )
+);
 
 app.use(
   expressSession({

@@ -9,6 +9,9 @@ services:
     user: "node"
     ports:
       - "3003:3003"
+    extra_hosts:
+      - "kafka0:185.237.13.240"
+      - "kafka1:185.237.13.240"
     volumes:
       - ./:/payments-service
       - ../kafka/kafka_secrets/:/etc/kafka/secrets
